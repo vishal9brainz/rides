@@ -4,7 +4,6 @@
     use Illuminate\Foundation\Auth\User as Authenticatable;
     use Tymon\JWTAuth\Contracts\JWTSubject;
     use App\Ride;
-    use mail;
     class User extends Authenticatable implements JWTSubject
     {
         use Notifiable;
