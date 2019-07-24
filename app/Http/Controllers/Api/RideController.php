@@ -6,6 +6,7 @@ use App\Ride;
 use JWTAuth;
 use DB;
 use App\Http\Resources\Ride as RideCollection;
+use App\Http\Resources\UserCollection as UserRideCollection;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Http\Controllers\Controller;
@@ -29,11 +30,12 @@ class RideController extends Controller
 		    $rides->seats=$request->seats;
 		    if ($this->user->rides()->save($rides))
 		    {
-		    	$rides=Ride::with('users')->whereDate('rides_DateTime',Carbon::parse($request->date." " .$request->time)->format('Y-m-d'))->get();
+		    	$rides=Ride::select('id','rides_DateTime','from_place','to_place','routes','seats')->where('user_id',$this->user->id)->orderBy('id','desc')->get();
+		    	// $rides=Ride::with('users')->whereDate('rides_DateTime',Carbon::parse($request->date." " .$request->time)->format('Y-m-d'))->get();
 		        return response()->json([
 		            'success' => true,
 		            'Message' =>'Rides Add Successfully',
-		            'rides' =>RideCollection::collection($rides),
+		            'rides' =>UserRideCollection::collection($rides),
 		        ]);
 		    }
 		}
@@ -42,21 +44,23 @@ class RideController extends Controller
 		$rides = $this->user->rides()->find($id);
 		$updated = $rides->fill(array_merge($request->except('date','time'),['rides_DateTime'=>Carbon::parse($request->date." " .$request->time)->format('Y-m-d H:i:s')]))->save();
 		if(count($updated)>0){
-			$rides=Ride::with('users')->where('id',$id)->get();
+			$rides=Ride::with('users')->where('id',$id)->first();
 			 return response()->json([
 		            'success' => true,
 		            'Message' =>'Rides Updated Successfully',
-		            'rides' =>RideCollection::collection($rides),
+		            'rides' => new RideCollection($rides),
 		        ]);
 		}
 	}
 	public function destroy($id)
 	{
 		$rides = $this->user->rides()->find($id);
+		$deleted_Rides=$rides;
 		if ($rides->delete()) {
 		        return response()->json([
 		            'success' => true,
-		            'Message' => 'Rides Deleted SuccessFully'
+		            'Message' => 'Rides Deleted SuccessFully',
+		            'deleted_Rides'=> new RideCollection($deleted_Rides)
 		        ]);
 		    }
 	}

@@ -9,7 +9,6 @@
 
     class JwtMiddleware extends BaseMiddleware
     {
-
         /**
          * Handle an incoming request.
          *

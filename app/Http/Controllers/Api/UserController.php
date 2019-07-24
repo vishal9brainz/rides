@@ -30,10 +30,12 @@ class UserController extends Controller
     public function register(RegisterAuthRequest $request)
     	{
         	$user = User::create([
-                'name'		=> $request->get('name'),
-                'email' 	=> $request->get('email'),
-                'password' 	=> bcrypt($request->get('password')),
-                'mobile'    => $request->get('mobile'),
+                'name'		     => $request->get('name'),
+                'email' 	     => $request->get('email'),
+                'password' 	     => bcrypt($request->get('password')),
+                'mobile'         => $request->get('mobile'),
+                'vehicle_type'   => $request->get('vehicle_type'),
+                'vehicle_number' => $request->get('vehicle_number')
             ]);
             $token = JWTAuth::fromUser($user);
             return response()->json([
@@ -45,7 +47,7 @@ class UserController extends Controller
     public function getAuthUser(Request $request)
         {
             $user = JWTAuth::authenticate($request->token);
-            return response()->json(['user' => $user->only(['name','email','mobile'])]);
+            return response()->json(['user' => $user->only(['name','email','mobile','vehicle_type','vehicle_number'])]);
         }
     public function logout(Request $request)
         {
@@ -63,5 +65,20 @@ class UserController extends Controller
                 'success' => true,
                 'message' => 'Profile Updated successfully'
             ]);
+    }
+    public function changePassword(Request $request)
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!(\Hash::check($request->get('password'), $user->password))) {
+           return response()->json([
+               'success' => false,
+               'message' => 'Wrong Password',
+           ]);
+       }
+        $user->update(['password'=>bcrypt($request->new_password)]);
+        return response()->json([
+               'success' => true,
+               'message' => 'Password Updated',
+           ]);
     }
 }
