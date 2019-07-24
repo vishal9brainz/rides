@@ -15,7 +15,7 @@ class ForgotPasswordController extends Controller
         $user=User::where('email',$request->email)->first();
         $token = app('auth.password.broker')->createToken($user);
         $url='http://samp.ca/rides/password/reset/'.$token;
-    	mail::send($request->email,'Reset Password Link',$url);
+    	mail($request->email,'Reset Password Link',$url);
         return response()->json([
         	'success'		=>true,
         	'Message'		=>'Mail Sent SuccessFully',
