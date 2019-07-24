@@ -5,15 +5,18 @@ use App\Http\Requests\ForgotPasswordRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Auth;
+use App\User;
+use mail;
 use App\Http\Controllers\Controller;
 
 class ForgotPasswordController extends Controller
 {
     public function sendEmail(ForgotPasswordRequest $request)
     {
-    	$response = $this->broker()->sendResetLink(
-            $request->only('email')
-        );
+        $user=User::where('email',$request->email)->first();
+        $token = app('auth.password.broker')->createToken($user);
+        $url='http://samp.ca/rides/password/reset/'.$token;
+    	mail::send($request->email,'Reset Password Link',$url);
         return response()->json([
         	'success'		=>true,
         	'Message'		=>'Mail Sent SuccessFully',

@@ -4,6 +4,7 @@
     use Illuminate\Foundation\Auth\User as Authenticatable;
     use Tymon\JWTAuth\Contracts\JWTSubject;
     use App\Ride;
+    use mail;
     class User extends Authenticatable implements JWTSubject
     {
         use Notifiable;
@@ -36,5 +37,10 @@
         public function getJWTCustomClaims()
         {
             return [];
+        }
+        public static function generatePassword()
+        {
+      // Generate random string and encrypt it. 
+        return bcrypt(str_random(35));
         }
     }
