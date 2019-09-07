@@ -22,9 +22,11 @@ class Ride extends JsonResource
             'no_of_seats'  =>(string) $this->seats,
              'usersInfo' =>
             [
-                'name'  =>(string) $this->users->name,
-                'email'  =>(string) $this->users->email,
-                'mobile'  =>(string) $this->users->mobile,
+                'name'              =>(string) $this->users->name,
+                'email'             =>(string) $this->users->email,
+                'mobile'            =>(string) $this->users->mobile,
+                'vehicle_type'      =>(string) $this->users->vehicle_type,
+                'vehicle_number'    =>(string) $this->users->vehicle_number
             ],
             'routes'    =>[
                 'route_list'    =>(string) $this->routes,

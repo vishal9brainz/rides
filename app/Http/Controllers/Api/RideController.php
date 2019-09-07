@@ -64,4 +64,20 @@ class RideController extends Controller
 		        ]);
 		    }
 	}
+	public function getMyRides()
+	{
+		$rides=$this->user->rides()->get();
+		if(count($rides)>0){
+			return response()->json([
+		            'success' => true,
+		            'Message' => 'Rides Fetch SuccessFully',
+		            'Rides'=> UserRideCollection::collection($rides)
+		        ]);
+		}
+		return response()->json([
+		    'success' => true,
+		    'Message' => 'Sorry No Data Available',
+		]);
+
+	}
 }

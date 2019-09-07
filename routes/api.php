@@ -23,6 +23,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
 	Route::post('update_profile', 'Api\UserController@updateProfile');
 	Route::post('changePassword','Api\UserController@changePassword');
     Route::resource('rides','Api\RideController');
+    Route::get('getMyRides','Api\RideController@getMyRides');
 });
  Route::get('rides_list','Api\ListController@getList');
  Route::post('findRoute','Api\ListController@findRoute');
