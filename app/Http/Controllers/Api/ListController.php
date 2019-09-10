@@ -15,11 +15,18 @@ class ListController extends Controller
     public function getList()
 		{
 			$rides=Ride::with('users')->whereDate('created_at',Carbon::today())->orderBy('id','desc')->get();
-			return response()->json([
+			if(count($rides)>0){
+				return response()->json([
 		            'success' => true,
 		            'Message' =>'Rides Fetch Successfully',
 		            'rides' =>RideCollection::collection($rides),
 		        ]);
+			}else{
+				return response()->json([
+		            'success' => false,
+		            'Message' => 'Sorry No Routes Found..'
+		        ]);
+			}
 		}
 		public function findRoute(Request $request)
 		{
