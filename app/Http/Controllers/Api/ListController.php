@@ -15,7 +15,9 @@ class ListController extends Controller
     public function getList()
 		{
 			$rides=Ride::with('users')->whereDate('created_at',Carbon::today())->orderBy('id','desc')->get();
-			if(count($rides)>0){
+			$response=count($rides);
+			dd($response);
+			if(count($response)>0){
 				return response()->json([
 		            'success' => true,
 		            'Message' =>'Rides Fetch Successfully',
