@@ -43,7 +43,7 @@ class RideController extends Controller
 	{
 		$rides = $this->user->rides()->find($id);
 		$updated = $rides->fill(array_merge($request->except('date','time'),['rides_DateTime'=>Carbon::parse($request->date." " .$request->time)->format('Y-m-d H:i:s')]))->save();
-		if(count($updated)>0){
+		if($updated){
 			$rides=Ride::with('users')->where('id',$id)->first();
 			 return response()->json([
 		            'success' => true,
