@@ -13,7 +13,6 @@ class UserController extends Controller
 {
     public function login(LoginAuthRequest $request)
     	{
-            dd('ok');
             $input = $request->only('email', 'password');
             $jwt_token = null;
 			if (!$jwt_token = JWTAuth::attempt($input)){
