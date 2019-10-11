@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\User;
+use App\location;
 class Ride extends JsonResource
 {
     /**
@@ -20,6 +21,7 @@ class Ride extends JsonResource
             'from_place'=>(string) $this->from_place,
             'to_place'  =>(string) $this->to_place,
             'no_of_seats'  =>(string) $this->seats,
+            'location'      =>Location::select('name')->where('id',$this->location_id)->first(),
              'usersInfo' =>
             [
                 'name'              =>(string) $this->users->name,

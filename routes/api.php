@@ -25,5 +25,6 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::resource('rides','Api\RideController');
     Route::get('getMyRides','Api\RideController@getMyRides');
 });
+ Route::resource('location','Api\LocationController');
  Route::get('rides_list','Api\ListController@getList');
  Route::post('findRoute','Api\ListController@findRoute');

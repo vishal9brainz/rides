@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ride extends Model
 {
-    protected $fillable=['user_id','rides_DateTime','from_place','to_place','seats','routes'];
+    protected $fillable=['user_id','rides_DateTime','from_place','to_place','seats','routes','location_id'];
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

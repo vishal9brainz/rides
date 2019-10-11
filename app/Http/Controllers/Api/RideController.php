@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\User;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use App\Location;
 class RideController extends Controller
 {
 
@@ -22,15 +23,17 @@ class RideController extends Controller
 		}
     public function store(Request $request)
 		{
+			$this->validateLocation($request->location_id);
 			$rides = new Ride();
 		    $rides->rides_DateTime = Carbon::parse($request->date." " .$request->time)->format('Y-m-d H:i:s');
 		    $rides->from_place = $request->from_place;
 		    $rides->to_place=$request->to_place;
 		    $rides->routes=$request->routes;
+		    $rides->location_id=$request->location_id;
 		    $rides->seats=$request->seats;
 		    if ($this->user->rides()->save($rides))
 		    {
-		    	$rides=Ride::select('id','rides_DateTime','from_place','to_place','routes','seats')->where('user_id',$this->user->id)->orderBy('id','desc')->get();
+		    	$rides=Ride::select('id','rides_DateTime','from_place','to_place','routes','seats','location_id')->where('user_id',$this->user->id)->orderBy('id','desc')->get();
 		    	// $rides=Ride::with('users')->whereDate('rides_DateTime',Carbon::parse($request->date." " .$request->time)->format('Y-m-d'))->get();
 		        return response()->json([
 		            'success' => true,
@@ -41,6 +44,7 @@ class RideController extends Controller
 		}
 	public function update(Request $request,$id)
 	{
+		$this->validateLocation($request->location_id);
 		$rides = $this->user->rides()->find($id);
 		$updated = $rides->fill(array_merge($request->except('date','time'),['rides_DateTime'=>Carbon::parse($request->date." " .$request->time)->format('Y-m-d H:i:s')]))->save();
 		if($updated){
@@ -79,5 +83,14 @@ class RideController extends Controller
 		    'Message' => 'Sorry No Data Available',
 		]);
 
+	}
+	public function validateLocation($location){
+		$locations=Location::where('id',$location)->count();
+		if($locations>0){
+			return;
+		}else{
+			echo json_encode(['success'=>false,'message'=>'Location Not Available']);
+			exit();
+		}
 	}
 }

@@ -8,13 +8,15 @@ use App\User;
 use App\Ride;
 use App\Http\Resources\Ride as RideCollection;
 use Carbon\Carbon;
+use App\Location;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ListController extends Controller
 {
-    public function getList()
+    public function getList(Request $request)
 		{
-			$rides=Ride::with('users')->whereDate('created_at',Carbon::today())->orderBy('id','desc')->get();
+			$this->validateLocation($request->location_id);
+			$rides=Ride::with('users')->whereDate('created_at',Carbon::today())->where('location_id',$request->location_id)->orderBy('id','desc')->get();
 			$response=count($rides->toArray());
 			if($response>0){
 				return response()->json([
@@ -45,4 +47,14 @@ class ListController extends Controller
 		            'Message' =>'Sorry No Route Founds',
 		        ]);
 		}
+		public function validateLocation($location)
+		{
+			$locations=Ride::where('location_id',$location)->count();
+			if($locations>0){
+				return;
+			}else{
+				echo json_encode(['success'=>false,'message'=>'Location Not Available']);
+				exit();
+		}
+	}
 }
