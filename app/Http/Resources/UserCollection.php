@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\location;
+use App\Location;
 class UserCollection extends JsonResource
 {
     /**
