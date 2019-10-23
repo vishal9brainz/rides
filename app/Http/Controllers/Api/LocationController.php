@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Location;
+use App\Http\Requests\LocationRequest;
 class LocationController extends Controller
 {
     /**
@@ -37,7 +38,7 @@ class LocationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(LocationRequest $request)
     {
         Location::create($request->only('name'));
         return response()->json([
@@ -76,7 +77,7 @@ class LocationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    { 
        $locations=Location::find($id);
        if($locations){
             $locations->update($request->only('name'));
