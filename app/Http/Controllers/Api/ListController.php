@@ -16,7 +16,7 @@ class ListController extends Controller
     public function getList(Request $request)
 		{
 			$this->validateLocation($request->location_id);
-			$rides=Ride::with('users')->where('location_id',$request->location_id)->orderBy('created_at','desc')->get();
+			$rides=Ride::with('users')->whereDate('rides_DateTime','<=',Carbon::today())->where('location_id',$request->location_id)->orderBy('created_at','desc')->get();
 			$response=count($rides->toArray());
 			if($response>0){
 				return response()->json([
