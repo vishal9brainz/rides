@@ -21,7 +21,7 @@ class Ride extends JsonResource
             'from_place'=>(string) $this->from_place,
             'to_place'  =>(string) $this->to_place,
             'no_of_seats'  =>(string) $this->seats,
-            'location'      =>Location::select('name')->where('id',$this->location_id)->first(),
+            'location'      =>Location::select('name','id')->where('id',$this->location_id)->first(),
              'usersInfo' =>
             [
                 'name'              =>(string) $this->users->name,
